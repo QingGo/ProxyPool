@@ -129,6 +129,7 @@ class UsefulProxyDocsModel(DocsModel):
         https = kwargs.get("https", None)
         region = kwargs.get("region", None)
         type_ = kwargs.get("type", None)
+        not_region = kwargs.get("not_region", None)
 
         result = None
         operation_list = 	[
@@ -151,6 +152,9 @@ class UsefulProxyDocsModel(DocsModel):
 
         if region: 
             operation_list[0]["$match"]["region_list"] = { "$in": [region] } 
+
+        if not_region: 
+            operation_list[0]["$match"]["region_list"] = { "$nin": [not_region] } 
 
         log.debug("getSampleUsefulProxy, operation_list:{operation_list}, ".format(operation_list=str(operation_list)))
         data = self.mc.aggregate(operation_list)

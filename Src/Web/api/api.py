@@ -77,6 +77,7 @@ class Proxy(Resource):
             "https": self.args.get('https'),
             "type": self.args.get('type'),
             "region": self.args.get('region'),
+            "not_region": self.args.get('not_region')
         }
 
         item = proxy_manager.getSampleUsefulProxy(**options)
