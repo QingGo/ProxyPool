@@ -2,6 +2,7 @@ from flask import Flask, jsonify, url_for, redirect, render_template, request
 from flask_restful import reqparse, abort, Api, Resource
 
 from Manager.ProxyManager import proxy_manager
+from Log.LogManager import log
 
 API_LIST = {
     "/api/v1/proxy/": {
@@ -79,6 +80,7 @@ class Proxy(Resource):
             "region": self.args.get('region'),
             "not_region": self.args.get('not_region')
         }
+        log.debug("receive params: {}".format(options))
 
         item = proxy_manager.getSampleUsefulProxy(**options)
         if item:
