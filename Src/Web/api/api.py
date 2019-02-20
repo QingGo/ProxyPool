@@ -66,7 +66,6 @@ class Proxy(Resource):
         parser.add_argument('https', type=int, choices=[1], location='args')
         parser.add_argument('type', type=int, choices=[1,2], location='args')
         parser.add_argument('region', type=str, location='args')
-        parser.add_argument('not_region', type=str, location='args')
         parser.add_argument('token', type=str, location='args')
         self.args = parser.parse_args()
 
@@ -79,7 +78,6 @@ class Proxy(Resource):
             "https": self.args.get('https'),
             "type": self.args.get('type'),
             "region": self.args.get('region'),
-            "not_region": self.args.get('not_region')
         }
         log.debug("receive params: {}".format(options))
 

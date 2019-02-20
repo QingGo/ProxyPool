@@ -30,6 +30,12 @@ class DocsModel(object):
             password=db_password,
         )
 
+def parse_regin_to_mongo(region_str):
+    if region_str.startswith('!'):
+        return { "$nin": [region_str[1:]] } 
+    else:
+        return { "$in": [region_str] }
+
 class UsefulProxyDocsModel(DocsModel):
     docs_name = "useful_proxy"
 
@@ -104,7 +110,7 @@ class UsefulProxyDocsModel(DocsModel):
             operation_list[0]["$match"]["type"] = { "$eq": type_ }
 
         if region:
-            operation_list[0]["$match"]["region_list"] = { "$in": [region] }
+            operation_list[0]["$match"]["region_list"] = parse_regin_to_mongo(region)
 
         log.debug("getAllValidUsefulProxy, operation_list:{operation_list}, ".format(operation_list=str(operation_list)))
         result = self.mc.aggregate(operation_list)
@@ -129,7 +135,6 @@ class UsefulProxyDocsModel(DocsModel):
         https = kwargs.get("https", None)
         region = kwargs.get("region", None)
         type_ = kwargs.get("type", None)
-        not_region = kwargs.get("not_region", None)
 
         result = None
         operation_list = 	[
@@ -151,10 +156,7 @@ class UsefulProxyDocsModel(DocsModel):
             operation_list[0]["$match"]["type"] = { "$eq": type_ }
 
         if region: 
-            operation_list[0]["$match"]["region_list"] = { "$in": [region] } 
-
-        if not_region: 
-            operation_list[0]["$match"]["region_list"] = { "$nin": [not_region] } 
+            operation_list[0]["$match"]["region_list"] = parse_regin_to_mongo(region)
 
         log.debug("getSampleUsefulProxy, operation_list:{operation_list}, ".format(operation_list=str(operation_list)))
         data = self.mc.aggregate(operation_list)
